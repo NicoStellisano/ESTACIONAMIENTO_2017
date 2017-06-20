@@ -5,22 +5,26 @@ class Empleado
     public $apellido;
     public $contraseña;
     public static $contadorOperaciones=0;
+	public $admin;
 
     
 
-    public function __construct($apellido,$contraseña)
+    public function __construct($apellido,$contraseña,$admin=0)
 	{
         $this->apellido = $apellido;
 		$this->contraseña = $contraseña;
+		$this->admin = $admin;
 		
 	}
 
     public static function GuardarEnBase($obj)
 	{
 		$pdo = new PDO("mysql:host=localhost;dbname=estacionamiento;charset=utf8","root","");
-		$resultado=$pdo->prepare("INSERT INTO empleados (apellido,contraseña) VALUES (?,?)");
+		$resultado=$pdo->prepare("INSERT INTO empleados (apellido,contraseña,admin) VALUES (?,?,?)");
 		$resultado->bindParam(1,$obj->apellido);
 		$resultado->bindParam(2,$obj->contraseña);
+		$resultado->bindParam(3,$obj->admin);
+
 		$resultado->execute();
 	}
 
@@ -47,7 +51,7 @@ class Empleado
 	{
 		$ListaDeProductosBase = array();
 		$pdo = new PDO("mysql:host=localhost;dbname=estacionamiento;charset=utf8","root","");
-		$resultado=$pdo->query("SELECT apellido AS apellido,contraseña AS contraseña,cantidadOp AS contadorOperaciones FROM empleados");
+		$resultado=$pdo->query("SELECT apellido AS apellido,contraseña AS contraseña,admin AS admin,cantidadOp AS contadorOperaciones FROM empleados");
 		
 		//var_dump($registros);
 		while($obj = $resultado->fetchObject("Empleado")) {
@@ -62,14 +66,12 @@ class Empleado
 
     	public static function LoginEmp($obj)
 	{
-        $dia= date("d:m");
-        $hora = date("H:i"); 
-
+        
+        $hora = date("Y-m-d H:i:s");
 		$pdo = new PDO("mysql:host=localhost;dbname=estacionamiento;charset=utf8","root","");
-		$resultado=$pdo->query("INSERT INTO empleados (apellido,dia,hora) VALUES (?,?,?)");
+		$resultado=$pdo->query("INSERT INTO login (apellido,hora) VALUES (?,?,?)");
 		$resultado->bindParam(1,$obj->apellido);
-		$resultado->bindParam(2,$dia);
-        $resultado->bindParam(3,$hora);
+        $resultado->bindParam(2,$hora);
 		$resultado->execute();
 		
 	}
