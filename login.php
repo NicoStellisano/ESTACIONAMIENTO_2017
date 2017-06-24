@@ -1,6 +1,10 @@
+<<<<<<< HEAD
 <?php session_start(); ?>
 <!DOCTYPE html>
 
+=======
+<!DOCTYPE html>
+>>>>>>> origin/master
 <html>
     <head>
  <meta charset="utf-8" />
@@ -103,7 +107,10 @@ if(isset($_POST['apellido']) && isset($_POST['contraseña'])){
 
 //INVOCO AL METODO DE MI WS		
 		$cds = $client->call('UsuarioExistente', array($_POST['apellido'],$_POST['contraseña']));
+<<<<<<< HEAD
 //print_r($client);
+=======
+>>>>>>> origin/master
 
 		if ($client->fault) {
 			echo '<h2>ERROR AL INVOCAR METODO:</h2><pre>';
@@ -117,6 +124,7 @@ if(isset($_POST['apellido']) && isset($_POST['contraseña'])){
 			else {
         if($cds!=NULL)
         {
+<<<<<<< HEAD
           
           $_SESSION["usuario"]=$cds[0];
           	//	var_dump($_SESSION);
@@ -130,6 +138,19 @@ die("<script>location.href = 'http://localhost/ESTACIONAMIENTO_2017/principal.ph
         //   header("Location: ./principalAdmin.php");
            die("<script>location.href = 'http://localhost/ESTACIONAMIENTO_2017/principalAdmin.php'</script>");
         }
+=======
+          session_start();
+          $_SESSION["usuario"]=$cds[0];
+          	//	var_dump($_SESSION);
+/*
+          if($cds[2]==0)
+        header("Location: ./principal.php");
+        else
+        {
+          $_SESSION["admin"]=1;
+           header("Location: ./principalAdmin.php");
+        }*/
+>>>>>>> origin/master
        
         }
 			

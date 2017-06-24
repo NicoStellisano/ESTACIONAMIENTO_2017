@@ -61,7 +61,11 @@
      <ul class="nav navbar-nav navbar-right">
 
         <li ><a style="color:white;padding-bottom: 11px" href="registro.html" onmouseover="BackColor(this.id,'black')" id="Registrarse" onmouseout="BackColor(this.id,'#191919')"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>  Registrarse</a></li> 
+<<<<<<< HEAD
        <li style="padding-right:65px"><button  onclick="window.location.href='login.php'" onmouseover="BackColor(this.id,'black')" id="Login" onmouseout="BackColor(this.id,'#191919')" style="background-color:#191919;border-color:grey;border-style:solid;border-width:1px;color:white" class="btn btn-default navbar-btn" ><strong><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Iniciar Sesión </strong></button></li>
+=======
+       <li style="padding-right:65px"><button  onclick="window.location.href='login.html'" onmouseover="BackColor(this.id,'black')" id="Login" onmouseout="BackColor(this.id,'#191919')" style="background-color:#191919;border-color:grey;border-style:solid;border-width:1px;color:white" class="btn btn-default navbar-btn" ><strong><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Iniciar Sesión </strong></button></li>
+>>>>>>> origin/master
       </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->

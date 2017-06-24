@@ -6,7 +6,11 @@ var_dump($_SESSION["usuario"]);
 <html>
 <head>
 <meta charset="utf-8">
+<<<<<<< HEAD
         <script type="text/javascript" src="//code.jquery.com/jquery-latest.js"></script>
+=======
+<script src="jquery.js" type="text/javascript"></script>
+>>>>>>> origin/master
 <script src="funciones.js" type="text/javascript"></script>
 </head>
 <body style="

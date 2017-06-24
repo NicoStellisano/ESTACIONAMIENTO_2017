@@ -31,6 +31,7 @@ function Registro()
 function BackColor(element,color)
 {
  var elemento = $('#'+element).css("background-color",color);
+<<<<<<< HEAD
 }
 
 function logout()
@@ -73,4 +74,6 @@ function Color()
 	.fail(function (jqXHR, textStatus, errorThrown) {
         alert(jqXHR.responseText + "\n" + textStatus + "\n" + errorThrown);
     });  
+=======
+>>>>>>> origin/master
 }

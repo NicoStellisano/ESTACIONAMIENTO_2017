@@ -2,6 +2,7 @@
 require_once "verificarAdmin.php"; 
 var_dump($_SESSION["usuario"]);
 
+<<<<<<< HEAD
 ?>
 <html>
 <head>
@@ -22,3 +23,6 @@ var_dump($_SESSION["usuario"]);
 <div id="divResultado"></div>
 </body>
 </html>
+=======
+?>
+>>>>>>> origin/master
