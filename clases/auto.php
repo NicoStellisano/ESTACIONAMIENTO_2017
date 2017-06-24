@@ -20,16 +20,15 @@ class Auto
 
      public static function GuardarEnBase($obj)
 	{
-        $dia= date("d:m");
+        
         $hora= date("Y-m-d H:i:s");
 		$pdo = new PDO("mysql:host=localhost;dbname=estacionamiento;charset=utf8","root","");
 		$resultado=$pdo->prepare("INSERT INTO autos (cochera,patente,dia,ingreso,marca,color) VALUES (?,?,?,?,?,?)");
 		$resultado->bindParam(1,$obj->cochera);
 		$resultado->bindParam(2,$obj->patente);
-        $resultado->bindParam(3,$dia);
-		$resultado->bindParam(4,$hora);
-        $resultado->bindParam(5,$obj->marca);
-		$resultado->bindParam(6,$obj->color);
+		$resultado->bindParam(3,$hora);
+        $resultado->bindParam(4,$obj->marca);
+		$resultado->bindParam(5,$obj->color);
 		$resultado->execute();
 	}
 
@@ -43,23 +42,25 @@ class Auto
         $resultado->bindParam(1,$obj->patente);
 
         $dteDiff  = $ing->diff($eg[0]);
-        $tiempoDif =(float)$dteDiff->format("%H");
-        $precio;
-        if($tiempoDif>12)
-        {
-            $precio= $tiempoDif*$costos["hora"];
-        }else if ($tiempoDif<24)
-        {
-            $precio= (((int)$tiempoDif/24)*$costos["estadia"])+($tiempoDif-(($tiempoDif/24)*24))//REVISAR!
-            //$precio= ($tiempoDif*$costos["mestadia"])+(($tiempoDif-12)*$costos["hora"]);
+        $dias =(float)$dteDiff->format("%d");
+		$horasRestantes =(float)$dteDiff->format("%H")-(24*$dias);
+        $precio=(((int)$dias*$costos["estadia"]);
 
-        }else if()
+		if($horasRestantes >=12)
+		{
+		$precio+=$costos["mestadia"];
+		$precio+=($horasRestantes-12)*$costos["hora"];
+		}else{
+			$precio+=($horasRestantes)*$costos["hora"];
+		}
+		
+
 
 
 		$resultado=$pdo->prepare("UPDATE autos SET egreso=?,pago=? WHERE patente=?");
-		$resultado->bindParam(1,$pass);
-		$resultado->bindParam(2,$obj->apellido);
-    	$resultado->bindParam(3,$obj->apellido);
+		$resultado->bindParam(1,$eg);
+		$resultado->bindParam(2,$precio);
+    	$resultado->bindParam(3,$obj->patente);
 
 		$resultado->execute();
 	}
