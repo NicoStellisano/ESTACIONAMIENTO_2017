@@ -15,6 +15,7 @@ class Empleado
 	public $usuario;
     public $apellido;
     public $contraseña;
+<<<<<<< HEAD
     public $contadorOperaciones=0;
 	public $admin;
 	public $suspendido;
@@ -22,17 +23,29 @@ class Empleado
     
 
     public function __construct($usuario,$apellido,$contraseña,$admin=0,$contadorOperaciones=0,$suspendido=0)
+=======
+    public static $contadorOperaciones=0;
+	public $admin;
+
+    
+
+    public function __construct($apellido,$contraseña,$admin=0)
+>>>>>>> origin/master
 	{
 		$this->usuario=$usuario;
         $this->apellido = $apellido;
 		$this->contraseña = $contraseña;
 		$this->admin = $admin;
+<<<<<<< HEAD
         $this->suspendido = $suspendido;
 
+=======
+>>>>>>> origin/master
 		
 	}
 
     public static function GuardarEnBase($obj)
+<<<<<<< HEAD
 	{ 
 		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
 		$usuario=$obj->apellido.rand(1000,5000);
@@ -42,6 +55,16 @@ class Empleado
 		$consulta = $objetoAccesoDato->RetornarConsulta($sql);
 		$consulta->execute();
 		return "Observe los cambios en la base";
+=======
+	{
+		$pdo = new PDO("mysql:host=localhost;dbname=estacionamiento;charset=utf8","root","");
+		$resultado=$pdo->prepare("INSERT INTO empleados (apellido,contraseña,admin) VALUES (?,?,?)");
+		$resultado->bindParam(1,$obj->apellido);
+		$resultado->bindParam(2,$obj->contraseña);
+		$resultado->bindParam(3,$obj->admin);
+
+		$resultado->execute();
+>>>>>>> origin/master
 	}
 
      public static function ModificarBase($usuario,$pass)
@@ -90,8 +113,13 @@ $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
 		$consulta->execute();
 
 		$ListaDeProductosBase = array();
+<<<<<<< HEAD
 	//	$pdo = new PDO("mysql:host=localhost;dbname=estacionamiento;charset=utf8","root","");
 	//	$resultado=$pdo->query("SELECT usuario,apellido AS apellido,contraseña AS contraseña,admin AS admin,cantidadOp AS contadorOperaciones FROM empleados");
+=======
+		$pdo = new PDO("mysql:host=localhost;dbname=estacionamiento;charset=utf8","root","");
+		$resultado=$pdo->query("SELECT apellido AS apellido,contraseña AS contraseña,admin AS admin,cantidadOp AS contadorOperaciones FROM empleados");
+>>>>>>> origin/master
 		
 		//var_dump($registros);
 		
@@ -113,6 +141,7 @@ $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
 
 	public static function CrearTabla()
 	{
+<<<<<<< HEAD
 		$lista= Empleado::TraerTodosEmpleadosBase();
 		
 		$tabla='<table class="table" > <thead> <th>Usuario </th> <th> Apellido </th> <th> Contraseña</th><th> Admin</th><th> Contador Operaciones</th><th> Suspendido</th><th>Acción</th> </thead>';
@@ -142,6 +171,8 @@ $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
 
     	public static function LoginEmp($obj)
 	{
+=======
+>>>>>>> origin/master
         
         $hora = date("Y-m-d H:i:s");
 		$pdo = new PDO("mysql:host=localhost;dbname=estacionamiento;charset=utf8","root","");

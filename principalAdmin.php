@@ -1,5 +1,6 @@
 <?php
 require_once "verificarAdmin.php"; 
+<<<<<<< HEAD
 
 
 ?>
@@ -26,11 +27,25 @@ require_once "verificarAdmin.php";
   </style><!--background-size: cover;  Para expander la imagen background-image: url("http://www.fondos7.net/thumbs/9812_2.jpg"  background-attachment: fixed;);-->
     </head> 
    <body data-spy="scroll" data-target=".navbar" data-offset="50" style="
+=======
+var_dump($_SESSION["usuario"]);
+
+<<<<<<< HEAD
+?>
+<html>
+<head>
+<meta charset="utf-8">
+        <script type="text/javascript" src="//code.jquery.com/jquery-latest.js"></script>
+<script src="funciones.js" type="text/javascript"></script>
+</head>
+<body style="
+>>>>>>> origin/master
  <?php 
  if(isset($_COOKIE['ColorCookie-'.$_SESSION['usuario']]))
 {
     echo 'background-color:'.$_COOKIE['ColorCookie-'.$_SESSION['usuario']];
 } ?>">
+<<<<<<< HEAD
 
         <nav class="navbar navbar-inverse navbar-fixed-top" style="height:50px;border-color:grey;border-style:dotted;border-width:2px;background-color:#191919" role="navigation" >
   <div class="container-fluid">
@@ -84,3 +99,15 @@ Elige tu color de fondo
 <div id="divResultado"></div>
 </body>
 </html>
+=======
+<br>
+<input type="button" onclick="logout()" value="Salir"><br>
+<input type="color" id="col"><input type="button" onclick="Color()" value="Aceptar">
+
+<div id="divResultado"></div>
+</body>
+</html>
+=======
+?>
+>>>>>>> origin/master
+>>>>>>> origin/master

@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/master
 function Registro()
 {
     var nombre = $("#nombre").val();
@@ -26,6 +29,7 @@ function Registro()
     }); 
     return true;
 }
+<<<<<<< HEAD
 function Suspender(usuario,estado)
 {   
      $.ajax({
@@ -57,11 +61,18 @@ function Despedir(usuario)
         alert("Hubo un error en el sistema, intente más tarde");
     }); 
 }
+=======
+
+>>>>>>> origin/master
 
 
 function BackColor(element,color)
 {
  var elemento = $('#'+element).css("background-color",color);
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> origin/master
 }
 
 function logout()
@@ -98,10 +109,19 @@ function Color()
    .done(function (resultado) {//RECUPERO LA RESPUESTA DEL SERVIDOR EN 'RESULTADO', DE ACUERDO AL DATATYPE.
 		
         if(resultado=="OK")
+<<<<<<< HEAD
      window.location.href=window.location.href;
+=======
+      alert("Exito");
+>>>>>>> origin/master
        
 	})
 	.fail(function (jqXHR, textStatus, errorThrown) {
         alert(jqXHR.responseText + "\n" + textStatus + "\n" + errorThrown);
     });  
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> origin/master
+>>>>>>> origin/master
 }
