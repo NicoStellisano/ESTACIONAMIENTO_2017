@@ -1,81 +1,115 @@
 <?php
+require_once "AccesoDatos.php"; 
+require_once "Empleado.php"; 
 class Auto
 {
     public $cochera;
  	public $patente;
     public $color;
   	public $marca;
+	public $foto;
     public $ingreso;//Date
     public $egreso=NULL;//Date
     public $pago=NULL;
 
-    public function __construct($cochera,$patente,$color,$marca,$ingreso)
+    public function __construct($cochera,$patente,$color,$marca,$foto,$ingreso=NULL,$egreso=NULL,$pago=NULL)
 	{
         $this->cochera = $cochera;
 		$this->patente = $patente;
 		$this->color = $color;
 		$this->marca = $marca;
+		$this->foto = $foto;
 		$this->ingreso = $ingreso;
+		$this->egreso = $egreso;
+		$this->pago = $pago;
 	}
 
-     public static function GuardarEnBase($obj)
+     public static function GuardarEnBase($obj,$usuario)
 	{
-        $dia= date("d:m");
-        $hora= date("Y-m-d H:i:s");
-		$pdo = new PDO("mysql:host=localhost;dbname=estacionamiento;charset=utf8","root","");
-		$resultado=$pdo->prepare("INSERT INTO autos (cochera,patente,dia,ingreso,marca,color) VALUES (?,?,?,?,?,?)");
-		$resultado->bindParam(1,$obj->cochera);
-		$resultado->bindParam(2,$obj->patente);
-        $resultado->bindParam(3,$dia);
-		$resultado->bindParam(4,$hora);
-        $resultado->bindParam(5,$obj->marca);
-		$resultado->bindParam(6,$obj->color);
-		$resultado->execute();
+		     
+		$hora= date("Y-m-d H:i:s");
+		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
+		$obj->ingreso=$hora;
+		$sql = "INSERT INTO autos (cochera,patente,color,marca,foto,ingreso) 
+				VALUES ('$obj->cochera','$obj->patente','$obj->color','$obj->marca','$obj->foto','$obj->ingreso')";
+
+		$consulta = $objetoAccesoDato->RetornarConsulta($sql);
+		$consulta->execute();
+
+		Empleado::AumentarContador($usuario);
+
+		return ("Observe los cambios en la base");
 	}
 
-     public static function Egreso($obj,$pass,$costos)
+     public static function Egreso($patente,$usuario,$costos)
 	{
-        $eg= date("Y-m-d H:i:s");
+        
+
+$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
+	
+		$sql = "SELECT * FROM autos
+				WHERE patente='$patente'";
+
+		$consulta = $objetoAccesoDato->RetornarConsulta($sql);
+		$consulta->execute();
 
 
-		$pdo = new PDO("mysql:host=localhost;dbname=estacionamiento;charset=utf8","root","");
-        $ing = $pdo->prepare("SELECT ingreso FROM autos WHERE patente=?", PDO::FETCH_ASSOC);
-        $resultado->bindParam(1,$obj->patente);
+		$precio=0;
+		$obj=$consulta->fetchall(PDO::FETCH_ASSOC);
+		$auto= new Auto($obj["cochera"],$obj["patente"],$obj["color"],$obj["marca"],$obj["foto"],$obj["ingreso"],$obj["egreso"],$obj["pago"]);
+		$ingr=$auto->ingreso;
+		$eg= date("Y-m-d H:i:s");
+		$dteDiff  = $ingr->diff($eg);
+   	   $dias=date_format($dteDiff,'d');
+		  $precio+=$dias*$costos["estadia"];
+	   $horas=date_format($dteDiff,'h');
 
-        $dteDiff  = $ing->diff($eg[0]);
-        $tiempoDif =(float)$dteDiff->format("%H");
-        $precio;
-        if($tiempoDif>12)
-        {
-            $precio= $tiempoDif*$costos["hora"];
-        }else if ($tiempoDif<24)
-        {
-            $precio= (((int)$tiempoDif/24)*$costos["estadia"])+($tiempoDif-(($tiempoDif/24)*24))//REVISAR!
-            //$precio= ($tiempoDif*$costos["mestadia"])+(($tiempoDif-12)*$costos["hora"]);
+	   $horasRestantes=$horas-($dias*24);
+	   if($horasRestantes>=12)
+	   {
+			$precio+=$costos["mestadia"];
+			$horasRestantes-=12;
+	   }
+	   $precio+=$horasRestantes*$costos["hora"];
 
-        }else if()
-
-
-		$resultado=$pdo->prepare("UPDATE autos SET egreso=?,pago=? WHERE patente=?");
-		$resultado->bindParam(1,$pass);
-		$resultado->bindParam(2,$obj->apellido);
-    	$resultado->bindParam(3,$obj->apellido);
-
-		$resultado->execute();
-	}
-
-
-
-
-	public static function TraerTodosEmpleadosBase()
-	{
-		$ListaDeProductosBase = array();
-		$pdo = new PDO("mysql:host=localhost;dbname=estacionamiento;charset=utf8","root","");
-		$resultado=$pdo->query("SELECT apellido AS apellido,contraseña AS contraseña,cantidadOp AS contadorOperaciones FROM empleados");
+	   $auto->egreso=$eg;
+		$auto->pago=$precio;
+		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
 		
-		//var_dump($registros);
-		while($obj = $resultado->fetchObject("Empleado")) {
-			array_push($ListaDeProductosBase,$obj);
+		$sql = "UPDATE autos SET egreso='$auto->egreso',pago='$auto->pago',cochera=NULL WHERE patente='$auto->patente'";
+
+		$consulta = $objetoAccesoDato->RetornarConsulta($sql);
+		$consulta->execute();
+
+		Empleado::AumentarContador($usuario);
+
+		return $auto;
+	
+	}
+
+
+
+
+	public static function TraerTodos()
+	{
+		
+$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
+		
+		$sql = "SELECT * FROM autos";
+
+		$consulta = $objetoAccesoDato->RetornarConsulta($sql);
+		$consulta->execute();
+
+		$ListaDeProductosBase = array();
+		
+		$obj=$consulta->fetchall(PDO::FETCH_ASSOC);
+			for ($i=0; $i < count($obj); $i++) { 
+				# code...
+			
+			
+			$auto= new Auto($obj[$i]["cochera"],$obj[$i]["patente"],$obj[$i]["color"],$obj[$i]["marca"],$obj[$i]["foto"],$obj[$i]["ingreso"],$obj[$i]["egreso"],$obj[$i]["pago"]);
+			array_push($ListaDeProductosBase,$auto);
+			
 
 }
 
@@ -84,17 +118,5 @@ class Auto
 		
 	}
 
-    	public static function LoginEmp($obj)
-	{
-        $dia= date("d:m");
-        $hora = date("H:i"); 
-
-		$pdo = new PDO("mysql:host=localhost;dbname=estacionamiento;charset=utf8","root","");
-		$resultado=$pdo->query("INSERT INTO empleados (apellido,dia,hora) VALUES (?,?,?)");
-		$resultado->bindParam(1,$obj->apellido);
-		$resultado->bindParam(2,$dia);
-        $resultado->bindParam(3,$hora);
-		$resultado->execute();
-		
-	}
+   
 }
