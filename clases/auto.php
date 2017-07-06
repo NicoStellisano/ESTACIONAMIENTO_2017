@@ -1,6 +1,8 @@
 <?php
+session_start();
 require_once "AccesoDatos.php"; 
-require_once "Empleado.php"; 
+require_once "empleado.php"; 
+require_once "cochera.php";
 class Auto
 {
     public $cochera;
@@ -36,6 +38,7 @@ class Auto
 		$consulta = $objetoAccesoDato->RetornarConsulta($sql);
 		$consulta->execute();
 
+		Cochera::InsertarAuto($obj);
 		Empleado::AumentarContador($usuario);
 
 		return ("Observe los cambios en la base");
@@ -81,6 +84,7 @@ $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
 		$consulta = $objetoAccesoDato->RetornarConsulta($sql);
 		$consulta->execute();
 
+		Cochera::SaleAuto($auto);
 		Empleado::AumentarContador($usuario);
 
 		return $auto;
@@ -88,7 +92,17 @@ $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
 	}
 
 
+public static function TraerPorPatente($patente)
+{
+	$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
+	
+		$sql = "SELECT * FROM autos
+				WHERE patente='$patente'";
 
+		$consulta = $objetoAccesoDato->RetornarConsulta($sql);
+		$consulta->execute();
+		return $consulta->fetchall(PDO::FETCH_ASSOC);
+}
 
 	public static function TraerTodos()
 	{

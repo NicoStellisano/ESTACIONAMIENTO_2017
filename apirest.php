@@ -2,10 +2,11 @@
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
-require './vendor/autoload.php';
-require './clases/AccesoDatos.php';
-require './clases/auto.php';
-require './clases/empleado.php';
+require_once './vendor/autoload.php';
+require_once './clases/AccesoDatos.php';
+require_once './clases/auto.php';
+require_once './clases/empleado.php';
+require_once './clases/cochera.php';
 
 
 $config['displayErrorDetails'] = true;
@@ -26,7 +27,7 @@ $app = new \Slim\App(["settings" => $config]);
 
 //IMPLEMENTAR
 //GET -> TRAER TODOS
-$app->get('/apirest/auto', function(Request $request, Response $response) {
+$app->get('/auto', function(Request $request, Response $response) {
  $obj = Auto::TraerTodos();
      
 	$response->getBody()->write(json_encode($obj));
@@ -34,40 +35,29 @@ $app->get('/apirest/auto', function(Request $request, Response $response) {
     return $response;
 });
 //GET -> TRAER UNO
-$app->get('/apirest/auto/{patente}', function(Request $request, Response $response) {
- $id=$request->getAttribute('patente');
+$app->get('/auto/{patente}', function(Request $request, Response $response) {
+ $patente=$request->getAttribute('patente');
  
- $obj = cd::TraerPorID($id);
+ $obj = Auto::TraerPorPatente($patente);
      
 	$response->getBody()->write(json_encode($obj));
 
     return $response;
 });
 //POST -> INSERTAR (CON FOTO)
-$app->post('/apirest/auto[/]', function(Request $request, Response $response) {
+$app->post('/auto[/]', function(Request $request, Response $response) {
  $array=$request->getParsedBody();
  $destino= "./fotos/";
- 
- 
-     
-$micd = new cd();
-  	$micd->titel=$array["titulo"];
-  	$micd->interpret=$array["cantante"];
-  	$micd->jahr=$array["anio"];
-   
-  	
 
   	$archivos = $request->getUploadedFiles();
-
-
 	$nombreAnterior=$archivos['foto']->getClientFilename();
-     $micd->foto=$nombreAnterior;
-     $micd->InsertarElCdParametros();
+     $miauto=new Auto($array["cochera"],$array["patente"],$array["color"],$array["marca"],$nombreAnterior);
+    Auto::GuardarEnBase($miauto,$_SESSION["usuario"]);
 	$extension= explode(".", $nombreAnterior);
 	$extension=array_reverse($extension);
 
-  	$archivos['foto']->moveTo($destino.$array["titulo"].".".$extension[0]);
-    $response->getBody()->write(json_encode($micd));
+  	$archivos['foto']->moveTo($destino.$array["patente"].".".$extension[0]);
+    $response->getBody()->write(json_encode($miauto));
 
     return $response;
 });
@@ -83,15 +73,61 @@ cd::Actualizar($array["id"],$array["titulo"],$array["anio"],$array["cantante"],N
     return $response;
 });*/
 //DELETE -> ELIMINAR
-$app->delete('/apirest/auto/{id}', function(Request $request, Response $response) {
- $id=$request->getAttribute('id');
- 
- cd::EliminarPorID($id);
+$app->delete('/auto/{id}', function(Request $request, Response $response) {
+ $patente=$request->getAttribute('patente');
+ $costos["estadia"]=170;
+ $costos["mestadia"]=90;
+ $costos["hora"]=10;
+ Auto::Egreso($patente,$_SESSION["usuario"],$costos);
      
 	$response->getBody()->write("Consulte su base de datos para ver los cambios");
 
     return $response;
 });
 
+
+// ACA
+
+$app->get('/cochera', function(Request $request, Response $response) {
+ $obj = Cochera::TraerTodos();
+     
+	$response->getBody()->write(json_encode($obj));
+
+    return $response;
+});
+//GET -> TRAER UNO
+$app->get('/cochera/{numero}', function(Request $request, Response $response) {
+ $numero=$request->getAttribute('numero');
+ 
+ $obj = Cochera::TraerPorNumero($numero);
+     
+	$response->getBody()->write(json_encode($obj));
+
+    return $response;
+});
+//POST -> INSERTAR 
+$app->post('/cochera[/]', function(Request $request, Response $response) {
+ $array=$request->getParsedBody();
+
+     $micochera=new Cochera(intval($array["piso"]),intval($array["discapacidad"]),intval($array["numero"]));
+    Cochera::AgregarCochera($micochera);
+	
+    $response->getBody()->write(json_encode($micochera));
+
+    return $response;
+});
+/*
+//DELETE -> ELIMINAR
+$app->delete('/auto/{id}', function(Request $request, Response $response) {
+ $patente=$request->getAttribute('patente');
+ $costos["estadia"]=170;
+ $costos["mestadia"]=90;
+ $costos["hora"]=10;
+ Auto::Egreso($patente,$_SESSION["usuario"],$costos);
+     
+	$response->getBody()->write("Consulte su base de datos para ver los cambios");
+
+    return $response;
+});*/
 
 $app->run();

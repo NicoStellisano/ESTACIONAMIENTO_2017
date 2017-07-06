@@ -138,6 +138,40 @@ function TraerAutos(){
     });    
 
 }
+
+
+function TraerCocheras(){
+
+    var pagina = "http://localhost/ESTACIONAMIENTO_2017/cochera";// REVISAR !!!
+
+    $.ajax({
+        type: 'GET',
+        url: pagina,
+        dataType: "json",
+        async: true
+    })
+    .done(function (objJson) {
+
+        var tablaEncabezado = "<table border='1' class='table'>";
+        tablaEncabezado += "<tr><th>NUMERO</th><th>AUTO</th><th>PISO</th><th>DISCAPACIDAD</th><th>CONTADOR USO</th><th>ACCION</th></tr>";
+        var tablaCuerpo = "";
+
+        for(var i=0;i<objJson.length;i++){
+            tablaCuerpo += "<tr><td>"+objJson[i].numero+"</td><td>"+objJson[i].auto+"</td><td>"+objJson[i].piso;
+            tablaCuerpo += "</td><td>"+objJson[i].discapacidad+"</td><td>"+objJson[i].contadorUso;
+            tablaCuerpo += "</td><td><a class='btn btn-success' href='#' data-id='"+objJson[i].numero+"' onclick='administrarModificar("+objJson[i].numero+")' data-toggle='modal'  data-target='#myModal' class='open-Modal'>Insertar Auto</a>&nbsp;";
+            tablaCuerpo += "&nbsp;<a class='btn btn-danger' href='#' onclick='Egresar("+objJson[i].numero+")'>Egreso</a></td></tr>";
+        }
+
+        $("#divTabla").html(tablaEncabezado+tablaCuerpo);
+
+    })
+    .fail(function (jqXHR, textStatus, errorThrown) {
+        alert(jqXHR.responseText + "\n" + textStatus + "\n" + errorThrown);
+    });    
+
+}
+
 function agregar(){
 
     var pagina = "http://localhost:8080/apirest_ABM_conFoto/apirest/cd";
@@ -177,7 +211,7 @@ function agregar(){
 }
 function administrarModificar(id){
 
-    var pagina = "http://localhost:8080/apirest_ABM_conFoto/apirest/cd/"+id;
+    var pagina = "http://localhost/ESTACIONAMIENTO_2017/cochera/"+id;
 
     $.ajax({
         type: 'GET',
@@ -188,10 +222,9 @@ function administrarModificar(id){
     .done(function (objJson) {
 
        // $("#id").val(objJson[0].id);
-       $("#id").val(objJson[0].id);
-        $("#titulo").val(objJson[0].titel);
-        $("#cantante").val(objJson[0].interpret);
-        $("#año").val(objJson[0].jahr);
+       console.log(objJson);
+       $("#cochera").val(objJson[0].numero);
+       
 
     })
     .fail(function (jqXHR, textStatus, errorThrown) {
@@ -201,20 +234,22 @@ function administrarModificar(id){
 
 function modificar(){
 
-    if(!confirm("Seguro de modificar?"))
+    if(!confirm("Seguro de insertar?"))
         return;
 
-    var pagina = "http://localhost:8080/apirest_ABM_conFoto/apirest/cd/";
+    var pagina = "http://localhost/ESTACIONAMIENTO_2017/auto";
 
     $.ajax({
-        type: 'PUT',
+        type: 'POST',
         url: pagina,
         dataType: "json",
         data: {
-            id : $("#id").val(),
-            titulo : $("#titulo").val(),
-            anio : $("#año").val(),
-            cantante : $("#cantante").val()
+            cochera : $("#cochera").val(),
+            patente : $("#patente").val(),
+            color : $("#color").val(),
+            marca : $("#marca").val(),
+            foto : $("#archivo").val()
+
             
         },
         async: true
@@ -227,7 +262,7 @@ function modificar(){
         $("#spanMensaje").html("Elemento modificado exitosamente!!!");
         $("#btnModificar").css("display", "none");*/
 
-        traerTodos();
+        TraerCocheras();
 
     })
     .fail(function (jqXHR, textStatus, errorThrown) {
@@ -236,12 +271,12 @@ function modificar(){
     });    
 
 }
-function eliminar(id){
+function eliminar(patente){
 
-    if(!confirm("Seguro de eliminar el elemneto con id="+id+"?"))
+    if(!confirm("Seguro de eliminar el elemento con patente="+patente+"?"))
         return;
 
-    var pagina = "http://localhost:8080/apirest_ABM_conFoto/apirest/cd/"+id;
+    var pagina = "http://localhost/ESTACIONAMIENTO_2017/auto/"+patente;
 
     $.ajax({
         type: 'DELETE',
@@ -252,7 +287,7 @@ function eliminar(id){
     })
     .done(function (objJson) {
 
-        traerTodos();
+        TraerCocheras();
     })
     .fail(function (jqXHR, textStatus, errorThrown) {
         alert(jqXHR.responseText + "\n" + textStatus + "\n" + errorThrown);

@@ -23,14 +23,15 @@ require_once "verificar.php";
        padding-top:70px;
       
   }
+  
   </style><!--background-size: cover;  Para expander la imagen background-image: url("http://www.fondos7.net/thumbs/9812_2.jpg"  background-attachment: fixed;);-->
     </head> 
-   <body data-spy="scroll" data-target=".navbar" data-offset="50" style="
+   <body onload="TraerCocheras()" data-spy="scroll" data-target=".navbar" data-offset="50" style="
  <?php 
  if(isset($_COOKIE['ColorCookie-'.$_SESSION['usuario']]))
 {
     echo 'background-color:'.$_COOKIE['ColorCookie-'.$_SESSION['usuario']];
-} ?>">
+} ?>" >
 
         <nav class="navbar navbar-inverse navbar-fixed-top" style="height:50px;border-color:grey;border-style:dotted;border-width:2px;background-color:#191919" role="navigation" >
   <div class="container-fluid">
@@ -50,7 +51,7 @@ require_once "verificar.php";
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li ><a style="color:white;padding-bottom: 11px" href="principalAdmin.php" id="Inicio" onmouseover="BackColor(this.id,'black')" onmouseout="BackColor(this.id,'#191919')"><span class="glyphicon glyphicon-home" aria-hidden="true"></span>  Inicio <span class="sr-only">(current)</span></a></li>
+        <li ><a style="color:white;padding-bottom: 11px" href="principal.php" id="Inicio" onmouseover="BackColor(this.id,'black')" onmouseout="BackColor(this.id,'#191919')"><span class="glyphicon glyphicon-home" aria-hidden="true"></span>  Inicio <span class="sr-only">(current)</span></a></li>
         <li><a style="color:white;padding-bottom: 11px" href="operaciones.php" id="Empleados" onmouseover="BackColor(this.id,'black')" onmouseout="BackColor(this.id,'#191919')">Operaciones <span class="sr-only">(current)</span></a></li>
      
       <form class="navbar-form navbar-left">
@@ -66,14 +67,24 @@ require_once "verificar.php";
   </div><!-- /.container-fluid -->
 </nav>
 
-<div id="myModal" class="modal fade" role="dialog">
-  <div class="modal-dialog">
+
+
+
+<br>
+ 
+<br>
+
+
+<div id="divTabla"></div>
+
+<div id="myModal" class="modal fade" role="dialog" style="overflow:inherit; padding-right:inherit !important;">
+  <div class="modal-dialog" style="overflow:inherit; padding-right:inherit !important;">
 
     <!-- Modal content-->
-    <div class="modal-content">
+    <div class="modal-content" style="overflow:inherit; padding-right:inherit !important;">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Modificar</h4>
+        <h4 class="modal-title">Insertar</h4>
       </div>
       <div class="modal-body">
         <table class="table">
@@ -82,7 +93,7 @@ require_once "verificar.php";
             <tr><td><input type="color" placeholder="Color" name="color" id="color"></td></tr>
             <tr><td><input type="text" placeholder="Marca" name="marca" id="marca"></td></tr>
            <tr><td>Foto</td><td><input type="file" id="archivo" name="archivo"></td> </tr>
-            <tr><td><input type="button" id="enviar" value="Modificar" onclick="modificar()"></td> </tr>
+            <tr><td><input type="button" id="enviar" value="Insertar" onclick="modificar()"></td> </tr>
 
         </table>
       </div>
@@ -93,11 +104,5 @@ require_once "verificar.php";
 
   </div>
 </div>
-
-
-<br>
- 
-<br>
-
-
-<div id="divResultado"></div>
+</body>
+</html>
