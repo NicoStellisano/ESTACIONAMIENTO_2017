@@ -1,5 +1,5 @@
 <?php
-require_once "verificarAdmin.php"; 
+require_once "verificar.php"; 
 
 
 ?>
@@ -7,7 +7,7 @@ require_once "verificarAdmin.php";
 <html>
     <head>
  <meta charset="utf-8" />
-         <title>Empleados</title>
+         <title>Autos y Cocheras</title>
         <script type="text/javascript" src="//code.jquery.com/jquery-latest.js"></script>
 
         <!-- Latest compiled and minified CSS -->
@@ -23,16 +23,20 @@ require_once "verificarAdmin.php";
        padding-top:70px;
       
   }
+  table, th, td {
+   border: 1px solid black;
+   font-weight: bold;
+}
+  
   </style><!--background-size: cover;  Para expander la imagen background-image: url("http://www.fondos7.net/thumbs/9812_2.jpg"  background-attachment: fixed;);-->
     </head> 
-   <body data-spy="scroll" data-target=".navbar" data-offset="50" style="
+   <body onload="AutosYCocheras()" data-spy="scroll" data-target=".navbar" data-offset="50" style="
  <?php 
  if(isset($_COOKIE['ColorCookie-'.$_SESSION['usuario']]))
 {
     echo 'background-color:'.$_COOKIE['ColorCookie-'.$_SESSION['usuario']];
-} ?>">
-
-        <nav class="navbar navbar-inverse navbar-fixed-top" style="height:50px;border-color:grey;border-style:dotted;border-width:2px;background-color:#191919" role="navigation" >
+} ?>"> 
+<nav class="navbar navbar-inverse navbar-fixed-top" style="height:50px;border-color:grey;border-style:dotted;border-width:2px;background-color:#191919" role="navigation" >
   <div class="container-fluid">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
@@ -63,20 +67,46 @@ require_once "verificarAdmin.php";
   </div>
 </nav>
 
+
+
+
 <br>
-<table class='table' style='width:35%' border='1'>
-<tr>
-<td><h3 style='font-weight:bold'>Elige tu color de fondo</h3></td>
-<td><input type="color" id="col" onchange="Color()"></td></tr>
-
-
-
-<tr><td colspan="2"><h2 style='font-weight:bold'>Cambio de contraseña</h2></td></tr>
+ 
 <br>
-<tr><td><h4>Contraseña nueva:</h4><input type='text' id='contraseniax' name='contraseniax' ></td>
-<td><input type='button' value="Cambiar Contraseña" onclick="CambiarPass('<?php echo $_SESSION["usuario"];?>')"></td></tr>
-</table>
 
-<div id="divResultado"></div>
+
+<div id="divTabla"></div>
+<br>
+<br>
+<br>
+
+<div id="divTabla2"></div>
+
+
+<div id="myModal" class="modal fade" role="dialog"  >
+  <div class="modal-dialog" style="left:0%" >
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Insertar</h4>
+      </div>
+      <div class="modal-body">
+        <div class="container-fluid">
+       <table class="table" style='border:none; text-align: left;'>
+
+        </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
 </body>
+
 </html>
+

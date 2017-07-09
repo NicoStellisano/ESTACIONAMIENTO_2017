@@ -1,5 +1,5 @@
 <?php
-require_once "verificar.php"; 
+require_once "verificarAdmin.php"; 
 
 
 ?>
@@ -49,15 +49,17 @@ require_once "verificar.php";
 
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li ><a style="color:white;padding-bottom: 11px" href="principal.php" id="Inicio" onmouseover="BackColor(this.id,'black')" onmouseout="BackColor(this.id,'#191919')"><span class="glyphicon glyphicon-home" aria-hidden="true"></span>  Inicio <span class="sr-only">(current)</span></a></li>
-        <li><a style="color:white;padding-bottom: 11px" href="operaciones.php" id="Empleados" onmouseover="BackColor(this.id,'black')" onmouseout="BackColor(this.id,'#191919')">Operaciones <span class="sr-only">(current)</span></a></li>
-     
+        <li ><a style="color:white;padding-bottom: 11px" href="principalAdmin.php" id="Inicio" onmouseover="BackColor(this.id,'black')" onmouseout="BackColor(this.id,'#191919')"><span class="glyphicon glyphicon-home" aria-hidden="true"></span>  Inicio <span class="sr-only">(current)</span></a></li>
+        <li><a style="color:white;padding-bottom: 11px" href="empleados.php" id="Empleados" onmouseover="BackColor(this.id,'black')" onmouseout="BackColor(this.id,'#191919')">Empleados <span class="sr-only">(current)</span></a></li>
+             <li><a style="color:white;padding-bottom: 11px" href="autos.php" id="Autos" onmouseover="BackColor(this.id,'black')" onmouseout="BackColor(this.id,'#191919')">Autos<span class="sr-only">(current)</span></a></li>
+             <li><a style="color:white;padding-bottom: 11px" href="opadmin.php" id="Operaciones" onmouseover="BackColor(this.id,'black')" onmouseout="BackColor(this.id,'#191919')">Operaciones<span class="sr-only">(current)</span></a></li>
+
       <form class="navbar-form navbar-left">
         <div class="form-group">
 
 
         <a class="btn" style="color:white;padding-bottom: 11px" onclick="logout()" onmouseover="BackColor(this.id,'black')" id="Logout" onmouseout="BackColor(this.id,'#191919')">  Salir</a>
-      <span style="color:orange;background-color:#191919" >Bienvenido empleado <strong> <?php echo $_SESSION["usuario"]; ?></strong> </span>
+      <span style="color:orange;background-color:#191919" >Bienvenido administrador <strong> <?php echo $_SESSION["usuario"]; ?></strong> </span>
      
       </form>
     

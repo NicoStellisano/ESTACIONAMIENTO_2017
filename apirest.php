@@ -29,6 +29,31 @@ $app = new \Slim\App(["settings" => $config]);
 //GET -> TRAER TODOS
 $app->get('/auto', function(Request $request, Response $response) {
  $obj = Auto::TraerTodos();
+ $cocheras= Cochera::UsoCocheras();
+ $ListaObj= array();
+ array_push($ListaObj,$obj);
+ array_push($ListaObj,$cocheras);
+     
+	$response->getBody()->write(json_encode($ListaObj));
+
+    return $response;
+});
+
+$app->post('/emp[/]', function(Request $request, Response $response) {
+ $array=$request->getParsedBody();
+ 
+Empleado::ModificarBase($array["usuario"],$array["contrasenia"]);
+    
+
+    $response->getBody()->write("Cambiada la contraseña");
+
+    return $response;
+});
+
+$app->get('/login', function(Request $request, Response $response) {
+
+ $obj= Empleado::TraerLogins();
+ 
      
 	$response->getBody()->write(json_encode($obj));
 
@@ -47,17 +72,38 @@ $app->get('/auto/{patente}', function(Request $request, Response $response) {
 //POST -> INSERTAR (CON FOTO)
 $app->post('/auto[/]', function(Request $request, Response $response) {
  $array=$request->getParsedBody();
- $destino= "./fotos/";
+ 
+ $miauto;
 
   	$archivos = $request->getUploadedFiles();
-	$nombreAnterior=$archivos['foto']->getClientFilename();
-     $miauto=new Auto($array["cochera"],$array["patente"],$array["color"],$array["marca"],$nombreAnterior);
-    Auto::GuardarEnBase($miauto,$_SESSION["usuario"]);
-	$extension= explode(".", $nombreAnterior);
-	$extension=array_reverse($extension);
+      if($archivos["foto"]!=NULL)
+      {
+          $destino= "./fotos/";
+    	$nombreAnterior=$archivos['foto']->getClientFilename();
+    	$extension= explode(".", $nombreAnterior);
+	    $extension=array_reverse($extension);
 
-  	$archivos['foto']->moveTo($destino.$array["patente"].".".$extension[0]);
+  	    $archivos['foto']->moveTo($destino.$array["patente"].".".$extension[0]);
+        $miauto=new Auto($array["cochera"],$array["patente"],$array["color"],$array["marca"],$array["patente"].".".$extension[0]);
+      Auto::GuardarEnBase($miauto,$_SESSION["usuario"]);
+      }else
+      {
+          $miauto=new Auto($array["cochera"],$array["patente"],$array["color"],$array["marca"],NULL);
+      Auto::GuardarEnBase($miauto,$_SESSION["usuario"]);
+          
+      }
+    
+
     $response->getBody()->write(json_encode($miauto));
+
+    return $response;
+});
+
+$app->post('/login/{usuario}', function(Request $request, Response $response) {
+ $usuario=$request->getAttribute("usuario");
+  $obj = Empleado::LoginEmp($usuario);
+     
+	$response->getBody()->write(json_encode($obj));
 
     return $response;
 });
@@ -73,14 +119,15 @@ cd::Actualizar($array["id"],$array["titulo"],$array["anio"],$array["cantante"],N
     return $response;
 });*/
 //DELETE -> ELIMINAR
-$app->delete('/auto/{id}', function(Request $request, Response $response) {
+$app->delete('/auto/{patente}', function(Request $request, Response $response) {
  $patente=$request->getAttribute('patente');
+ $costos=array();
  $costos["estadia"]=170;
  $costos["mestadia"]=90;
  $costos["hora"]=10;
- Auto::Egreso($patente,$_SESSION["usuario"],$costos);
+ $obj=Auto::Egreso($patente,$_SESSION["usuario"],$costos);
      
-	$response->getBody()->write("Consulte su base de datos para ver los cambios");
+	$response->getBody()->write(json_encode($obj));
 
     return $response;
 });

@@ -75,7 +75,10 @@ if(isset($_POST['usuario']) && isset($_POST['contraseña'])){
 			else {
         if($cds!=NULL)
         {
-          
+
+          $aux=$cds[0];
+              //    echo "<script>LoginEm($aux)</script>";
+              Empleado::LoginEmp($aux);
           $_SESSION["usuario"]=$cds[0];
           	//	var_dump($_SESSION);
 
@@ -89,6 +92,9 @@ die("<script>location.href = 'http://localhost/ESTACIONAMIENTO_2017/principal.ph
            die("<script>location.href = 'http://localhost/ESTACIONAMIENTO_2017/principalAdmin.php'</script>");
         }
        
+        }else 
+        {
+          die("<script>alert('Usuario y contraseña incorrectos o ha sido suspendido')</script>");
         }
 			
 		}

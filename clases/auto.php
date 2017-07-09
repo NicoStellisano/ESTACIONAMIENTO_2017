@@ -3,6 +3,7 @@ session_start();
 require_once "AccesoDatos.php"; 
 require_once "empleado.php"; 
 require_once "cochera.php";
+date_default_timezone_set("America/Argentina/Buenos_Aires");
 class Auto
 {
     public $cochera;
@@ -14,7 +15,7 @@ class Auto
     public $egreso=NULL;//Date
     public $pago=NULL;
 
-    public function __construct($cochera,$patente,$color,$marca,$foto,$ingreso=NULL,$egreso=NULL,$pago=NULL)
+    public function __construct($cochera,$patente,$color,$marca,$foto=NULL,$ingreso=NULL,$egreso=NULL,$pago=NULL)
 	{
         $this->cochera = $cochera;
 		$this->patente = $patente;
@@ -41,7 +42,7 @@ class Auto
 		Cochera::InsertarAuto($obj);
 		Empleado::AumentarContador($usuario);
 
-		return ("Observe los cambios en la base");
+		return TRUE;
 	}
 
      public static function Egreso($patente,$usuario,$costos)
@@ -56,17 +57,23 @@ $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
 		$consulta = $objetoAccesoDato->RetornarConsulta($sql);
 		$consulta->execute();
 
-
 		$precio=0;
 		$obj=$consulta->fetchall(PDO::FETCH_ASSOC);
-		$auto= new Auto($obj["cochera"],$obj["patente"],$obj["color"],$obj["marca"],$obj["foto"],$obj["ingreso"],$obj["egreso"],$obj["pago"]);
-		$ingr=$auto->ingreso;
-		$eg= date("Y-m-d H:i:s");
-		$dteDiff  = $ingr->diff($eg);
-   	   $dias=date_format($dteDiff,'d');
-		  $precio+=$dias*$costos["estadia"];
-	   $horas=date_format($dteDiff,'h');
 
+		$auto= new Auto($obj[0]["cochera"],$obj[0]["patente"],$obj[0]["color"],$obj[0]["marca"],$obj[0]["foto"],$obj[0]["ingreso"],$obj[0]["egreso"],$obj[0]["pago"]);
+		$ing=$auto->ingreso;
+		$eg= date("Y-m-d H:i:s");
+		$segundos = abs(strtotime($ing) - strtotime($eg));
+        $horas = ceil($segundos/60/60);
+   	   $dias = intval($horas/24);
+		  if($dias>=1)
+		  {
+		  $precio+=$dias*$costos["estadia"];
+		  
+		  }else{
+			  $dias=0;
+		  }
+		   
 	   $horasRestantes=$horas-($dias*24);
 	   if($horasRestantes>=12)
 	   {
@@ -77,6 +84,7 @@ $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
 
 	   $auto->egreso=$eg;
 		$auto->pago=$precio;
+		Cochera::SaleAuto($auto);
 		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
 		
 		$sql = "UPDATE autos SET egreso='$auto->egreso',pago='$auto->pago',cochera=NULL WHERE patente='$auto->patente'";
@@ -84,7 +92,7 @@ $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
 		$consulta = $objetoAccesoDato->RetornarConsulta($sql);
 		$consulta->execute();
 
-		Cochera::SaleAuto($auto);
+		
 		Empleado::AumentarContador($usuario);
 
 		return $auto;

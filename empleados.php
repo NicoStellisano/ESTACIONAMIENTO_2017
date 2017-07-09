@@ -23,18 +23,21 @@ require_once "verificarAdmin.php";
        padding-top:70px;
       
   }
+  table, th, td {
+   border: 1px solid black;
+   font-weight: bold;
+}
   </style><!--background-size: cover;  Para expander la imagen background-image: url("http://www.fondos7.net/thumbs/9812_2.jpg"  background-attachment: fixed;);-->
     </head> 
-   <body data-spy="scroll" data-target=".navbar" data-offset="50" style="
+   <body onload="TraerLogin()" data-spy="scroll" data-target=".navbar" data-offset="50" style="
  <?php 
  if(isset($_COOKIE['ColorCookie-'.$_SESSION['usuario']]))
 {
     echo 'background-color:'.$_COOKIE['ColorCookie-'.$_SESSION['usuario']];
 } ?>">
 
-        <nav class="navbar navbar-inverse navbar-fixed-top" style="height:50px;border-color:grey;border-style:dotted;border-width:2px;background-color:#191919" role="navigation" >
+      <nav class="navbar navbar-inverse navbar-fixed-top" style="height:50px;border-color:grey;border-style:dotted;border-width:2px;background-color:#191919" role="navigation" >
   <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
         <span class="sr-only">Toggle navigation</span>
@@ -42,43 +45,29 @@ require_once "verificarAdmin.php";
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <!-- <a class="navbar-brand" href="index.html">
-        <img class="img-circle" width="50" height="30" src="https://s-media-cache-ak0.pinimg.com/736x/33/b8/69/33b869f90619e81763dbf1fccc896d8d.jpg" >
-      </a>-->
     </div>
 
-    <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
         <li ><a style="color:white;padding-bottom: 11px" href="principalAdmin.php" id="Inicio" onmouseover="BackColor(this.id,'black')" onmouseout="BackColor(this.id,'#191919')"><span class="glyphicon glyphicon-home" aria-hidden="true"></span>  Inicio <span class="sr-only">(current)</span></a></li>
         <li><a style="color:white;padding-bottom: 11px" href="empleados.php" id="Empleados" onmouseover="BackColor(this.id,'black')" onmouseout="BackColor(this.id,'#191919')">Empleados <span class="sr-only">(current)</span></a></li>
-        <li><a style="color:white;padding-bottom: 11px" href="contacto.html" id="Contacto" onmouseover="BackColor(this.id,'black')" onmouseout="BackColor(this.id,'#191919')">Contacto<span class="sr-only">(current)</span></a></li>
-        <li class="dropdown">
-          <a style="color:white;padding-bottom: 11px" class="dropdown-toggle" data-toggle="dropdown" id="Carreras" onmouseover="BackColor(this.id,'black')" onmouseout="BackColor(this.id,'#191919')" role="button" aria-haspopup="true" aria-expanded="false">Carreras <span class="caret" style="color:lawngreen;"></span></a>
-          <ul class="dropdown-menu" style="background-color:#191919;">                  
-            <li><a style="color:white;background-color:#191919" onmouseover="BackColor(this.id,'black')" onmouseout="BackColor(this.id,'#191919')" id="Programacion" href="programacion.html">Programación</a></li>
-            <li style="background-color:white;" role="separator" class="divider"></li>
-            <li><a style="color:white;background-color:#191919" onmouseover="BackColor(this.id,'black')" onmouseout="BackColor(this.id,'#191919')" id="Sociologia" href="sociologia.html">Sociología</a></li>
-          </ul>
-        </li>
-      </ul>
+             <li><a style="color:white;padding-bottom: 11px" href="autos.php" id="Autos" onmouseover="BackColor(this.id,'black')" onmouseout="BackColor(this.id,'#191919')">Autos<span class="sr-only">(current)</span></a></li>
+             <li><a style="color:white;padding-bottom: 11px" href="opadmin.php" id="Operaciones" onmouseover="BackColor(this.id,'black')" onmouseout="BackColor(this.id,'#191919')">Operaciones<span class="sr-only">(current)</span></a></li>
+
       <form class="navbar-form navbar-left">
         <div class="form-group">
-          <input type="text" class="form-control" placeholder="Search">
-        </div>
-        <button style="color:white;background-color:#191919;border-color:grey;" onmouseover="BackColor(this.id,'black')" id="Buscar" onmouseout="BackColor(this.id,'#191919')" type="submit" class="btn btn-default">Buscar</button>
-    <!--class="nav navbar-nav navbar-right"-->
+
 
         <a class="btn" style="color:white;padding-bottom: 11px" onclick="logout()" onmouseover="BackColor(this.id,'black')" id="Logout" onmouseout="BackColor(this.id,'#191919')">  Salir</a>
       <span style="color:orange;background-color:#191919" >Bienvenido administrador <strong> <?php echo $_SESSION["usuario"]; ?></strong> </span>
      
       </form>
     
-    </div><!-- /.navbar-collapse -->
-  </div><!-- /.container-fluid -->
+    </div>
+  </div>
 </nav>
 <form action="empleados.php" method="post" name="frm2" id="frm2" >
-   <table class="table">
+   <table style='margin-left:auto; margin-right:auto;text-align:left;background-color:white' >
 <tr><td><input type="text" placeholder="Usuario" name="usuario" id="usuario"></td></tr>
 <tr><td><input type="text" placeholder="Apellido" name="apellido" id="apellido"></td></tr>
 <tr><td><input type="password" placeholder="Contraseña" name="contrasenia" id="contrasenia"></td></tr>
@@ -90,11 +79,13 @@ require_once "verificarAdmin.php";
 <tr><td><input type="submit" value="Agregar Empleado"></td></tr>
 
      </table>
-
+<br>
 </form>
+<div id="divTabla"></div>
+<br> <br>
   <form action="empleados.php" method="post" name="frm1" id="frm1" >
 <input type="hidden" id="tabla" name="tabla">
-<input type="submit" value="Crear Tabla">
+<center><input type="submit" style='text-align:center' class="btn btn-info" value="Lista Empleados"></center>
 </form>
 
 <br>

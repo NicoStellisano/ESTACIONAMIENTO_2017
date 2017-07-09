@@ -11,6 +11,7 @@ if(isset($_POST["desp"]))
 	echo ("si");
 	Empleado::Despedir($_POST["usuario"]);
 }
+date_default_timezone_set("America/Argentina/Buenos_Aires");
 class Empleado
 {
      	
@@ -29,7 +30,10 @@ class Empleado
         $this->apellido = $apellido;
 		$this->contraseña = $contraseña;
 		$this->admin = $admin;
+	    $this->contadorOperaciones = $contadorOperaciones;
+
         $this->suspendido = $suspendido;
+
 
 		
 	}
@@ -45,15 +49,15 @@ class Empleado
 		$consulta->execute();
 
 		$obj=$consulta->fetchall(PDO::FETCH_ASSOC);
-		$emp= new Empleado($obj["usuario"],$obj["apellido"],$obj["contraseña"],intval($obj[$i]["admin"]),intval($obj["contadorOperaciones"]),intval($obj["suspendido"]));
-
+		$cont = $obj[0]["cantidadOp"];
 
 		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
-		$cantTotal= $emp->contadorOperaciones+1;
-		$sql = "UPDATE empleados SET cantidadOp=$cantTotal WHERE usuario='$emp->usuario'";
+		$cantTotal= $cont+1;
+		$sql = "UPDATE empleados SET cantidadOp='$cantTotal' WHERE usuario='$usuario'";
 
 		$consulta = $objetoAccesoDato->RetornarConsulta($sql);
 		$consulta->execute();
+		return TRUE;
 	}
 
     public static function GuardarEnBase($obj)
@@ -68,11 +72,11 @@ class Empleado
 		return ("Observe los cambios en la base");
 	}
 
-     public static function ModificarBase($usuario,$pass)
+     public static function ModificarBase($usuario,$contrasenia)
 	{
 		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
 		
-		$sql = "UPDATE empleados SET contraseña='$pass' WHERE usuario='$usuario'";
+		$sql = "UPDATE empleados SET contraseña='$contrasenia' WHERE usuario='$usuario'";
 
 		$consulta = $objetoAccesoDato->RetornarConsulta($sql);
 		$consulta->execute();
@@ -108,26 +112,22 @@ class Empleado
 	{
 $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
 		
-		$sql = "SELECT usuario,apellido AS apellido,contraseña AS contraseña,admin AS admin,cantidadOp AS contadorOperaciones,suspendido FROM empleados";
+		$sql = "SELECT * FROM empleados";
 
 		$consulta = $objetoAccesoDato->RetornarConsulta($sql);
 		$consulta->execute();
 
 		$ListaDeProductosBase = array();
-	//	$pdo = new PDO("mysql:host=localhost;dbname=estacionamiento;charset=utf8","root","");
-	//	$resultado=$pdo->query("SELECT usuario,apellido AS apellido,contraseña AS contraseña,admin AS admin,cantidadOp AS contadorOperaciones FROM empleados");
-		
-		//var_dump($registros);
 		
 		$obj=$consulta->fetchall(PDO::FETCH_ASSOC);
 			for ($i=0; $i < count($obj); $i++) { 
 				# code...
 			
 			
-			$emp= new Empleado($obj[$i]["usuario"],$obj[$i]["apellido"],$obj[$i]["contraseña"],intval($obj[$i]["admin"]),intval($obj[$i]["contadorOperaciones"]),intval($obj[$i]["suspendido"]));
+			$emp= new Empleado($obj[$i]["usuario"],$obj[$i]["apellido"],$obj[$i]["contraseña"],intval($obj[$i]["admin"]),$obj[$i]["cantidadOp"],intval($obj[$i]["suspendido"]));
 			array_push($ListaDeProductosBase,$emp);
 			
-
+ 
 }
 
 		
@@ -139,49 +139,76 @@ $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
 	{
 		$lista= Empleado::TraerTodosEmpleadosBase();
 		
-		$tabla='<table class="table" > <thead> <th>Usuario </th> <th> Apellido </th> <th> Contraseña</th><th> Admin</th><th> Contador Operaciones</th><th> Suspendido</th><th>Acción</th> </thead>';
+		$tabla='<table class="table" > <thead style="background-color:black;color:lightgreen"> <th>Usuario </th> <th> Apellido </th> <th> Contraseña</th><th> Admin</th><th> Contador Operaciones</th><th> Suspendido</th><th>Acción</th> </thead>';
 
 		for ($i=0; $i < count($lista) ; $i++) { 
-		$tabla.= "<tr><td>".$lista[$i]->usuario."</td>";
+		
+			$estado;
+			if($lista[$i]->suspendido==0)
+			{
+				$estado=1;
+				$tabla.= "<tr style='background-color:lightgreen'><td>".$lista[$i]->usuario."</td>";
+			}
+			else
+			{
+				$estado=0;
+				$tabla.= "<tr style='background-color:IndianRed'><td>".$lista[$i]->usuario."</td>";
+			}
+
         $tabla.= "<td>".$lista[$i]->apellido."</td>";
         $tabla.= "<td>".$lista[$i]->contraseña."</td>";
 		$tabla.= "<td>".$lista[$i]->admin."</td>";
         $tabla.= "<td>".$lista[$i]->contadorOperaciones."</td>";
         $tabla.= "<td>".$lista[$i]->suspendido."</td>";
-		$estado;
-		if($lista[$i]->suspendido==0)
-		{
-			$estado=1;
-			}
-			else
-			{
-				$estado=0;
-		}
+		
+		if($lista[$i]->admin!=1)
         $tabla.="<td><input type='button' value='Suspender'  id='".$i."' class='btn btn-info' onclick='Suspender(\"".$lista[$i]->usuario."\",".$estado.")'><input type='button' value='Despedir' id='".$i."' class='btn btn-danger' onclick='Despedir(\"".$lista[$i]->usuario."\")'></td></tr>";
+		else
+		$tabla.="<td></td></tr>";
              
 		}
 		return ("<div>".$tabla."</div>");
 
 	}
 
-    	public static function LoginEmp($obj)
-	{
-        
-        $hora = date("Y-m-d H:i:s");
-		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
+    	public static function LoginEmp($usuario)
+		{ 
+			
+			date_default_timezone_set("America/Argentina/Buenos_Aires");
+			$hora = date("Y-m-d H:i:s");
+			$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
+			
+			$sql = "INSERT INTO login (usuario,hora) VALUES ('$usuario','$hora')";
+
+			$consulta = $objetoAccesoDato->RetornarConsulta($sql);
+			$consulta->execute();
+
+	
 		
-		$sql = "INSERT INTO login (apellido,hora) VALUES ('$obj->apellido','$hora')";
+		}
+
+		public static function TraerLogins()
+		{
+$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
+		
+		$sql = "SELECT * FROM login";
 
 		$consulta = $objetoAccesoDato->RetornarConsulta($sql);
 		$consulta->execute();
 
-	/*	$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
-		$cantTotal= $obj->contadorOperaciones+1;
-		$sql = "UPDATE empleados SET cantidadOp=$cantTotal WHERE usuario='$obj->usuario'";
-
-		$consulta = $objetoAccesoDato->RetornarConsulta($sql);
-		$consulta->execute();*/
+		$ListaDeProductosBase = array();
 		
+		$obj=$consulta->fetchall(PDO::FETCH_ASSOC);
+			for ($i=0; $i < count($obj); $i++) { 	
+			$log= new StdClass;
+			$log->usuario=$obj[$i]["usuario"];
+			$log->hora=$obj[$i]["hora"];
+			array_push($ListaDeProductosBase,$log);
+			
+}
+
+		
+		return $ListaDeProductosBase;
 		
 	}
 }

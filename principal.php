@@ -66,9 +66,18 @@ require_once "verificar.php";
 </nav>
 
 <br>
-Elige tu color de fondo
-<input type="color" id="col" onchange="Color()">
+<table class='table' style='width:35%' border='1'>
+<tr>
+<td><h3 style='font-weight:bold'>Elige tu color de fondo</h3></td>
+<td><input type="color" id="col" onchange="Color()"></td></tr>
 
+
+
+<tr><td colspan="2"><h2 style='font-weight:bold'>Cambio de contraseña</h2></td></tr>
+<br>
+<tr><td><h4>Contraseña nueva:</h4><input type='text' id='contraseniax' name='contraseniax' ></td>
+<td><input type='button' value="Cambiar Contraseña" onclick="CambiarPass('<?php echo $_SESSION["usuario"];?>')"></td></tr>
+</table>
 <div id="divResultado"></div>
 </body>
 </html>

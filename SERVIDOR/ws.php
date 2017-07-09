@@ -109,6 +109,9 @@ $server->register('Tabla',
 				$resultado[0]=$usuario;
 				$resultado[1]=$contraseña;
 				$resultado[2]=$item['admin'];
+
+				  
+
 				return $resultado;
 			}
 		}
