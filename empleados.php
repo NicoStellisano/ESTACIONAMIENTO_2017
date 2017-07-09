@@ -100,7 +100,7 @@ if(isset($_POST['tabla'])|| isset($_POST['apellido'])){
 		require_once('clases/AccesoDatos.php');
 		require_once('clases/empleado.php');
 
-		$host = 'http://localhost/ESTACIONAMIENTO_2017/SERVIDOR/ws.php';
+		$host = 'http://stellisano.esy.es/SERVIDOR/ws.php';
 		
 		$client = new nusoap_client($host . '?wsdl');
     $client->soap_defencoding = 'UTF-8';  

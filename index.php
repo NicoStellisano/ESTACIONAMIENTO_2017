@@ -48,7 +48,7 @@ if(isset($_POST['usuario']) && isset($_POST['contraseña'])){
 		require_once('clases/AccesoDatos.php');
 		require_once('clases/empleado.php');
 
-		$host = 'http://localhost/ESTACIONAMIENTO_2017/SERVIDOR/ws.php';
+		$host = 'http://stellisano.esy.es/SERVIDOR/ws.php';
 		
 		$client = new nusoap_client($host . '?wsdl');
     $client->soap_defencoding = 'UTF-8';
@@ -84,12 +84,12 @@ if(isset($_POST['usuario']) && isset($_POST['contraseña'])){
 
           if($cds[2]==0)
        // header("Location: ./principal.php"); // CAMBIAR A 8080
-die("<script>location.href = 'http://localhost/ESTACIONAMIENTO_2017/principal.php'</script>");       
+die("<script>location.href = 'http://stellisano.esy.es/principal.php'</script>");       
  else
         {
           $_SESSION["admin"]=1;
         //   header("Location: ./principalAdmin.php");
-           die("<script>location.href = 'http://localhost/ESTACIONAMIENTO_2017/principalAdmin.php'</script>");
+           die("<script>location.href = 'http://stellisano.esy.es/principalAdmin.php'</script>");
         }
        
         }else 

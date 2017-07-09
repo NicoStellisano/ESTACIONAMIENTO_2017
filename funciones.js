@@ -141,7 +141,7 @@ function TraerAutos(){
 
 function TraerLogin()
 {
-    var pagina = "http://localhost/ESTACIONAMIENTO_2017/login";// REVISAR !!!
+    var pagina = "http://stellisano.esy.es/login";// REVISAR !!!
 
     $.ajax({
         type: 'GET',
@@ -175,7 +175,7 @@ function TraerLogin()
 
 function CambiarPass(usuario)
 {
-     var pagina = "http://localhost/ESTACIONAMIENTO_2017/emp";
+     var pagina = "http://stellisano.esy.es/emp";
 
     var formData = new FormData();
 	
@@ -207,7 +207,7 @@ function CambiarPass(usuario)
 
 function AutosYCocheras()
 {
-    var pagina = "http://localhost/ESTACIONAMIENTO_2017/auto";// REVISAR !!!
+    var pagina = "http://stellisano.esy.es/auto";// REVISAR !!!
 
     $.ajax({
         type: 'GET',
@@ -274,7 +274,7 @@ var list= cocheras[2];
 
 function TraerCocheras(){
 
-    var pagina = "http://localhost/ESTACIONAMIENTO_2017/cochera";// REVISAR !!!
+    var pagina = "http://stellisano.esy.es/cochera";// REVISAR !!!
 
     $.ajax({
         type: 'GET',
@@ -318,7 +318,7 @@ function TraerCocheras(){
 
 function administrarModificar(id){
 
-    var pagina = "http://localhost/ESTACIONAMIENTO_2017/cochera/"+id;
+    var pagina = "http://stellisano.esy.es/cochera/"+id;
 
     $.ajax({
         type: 'GET',
@@ -341,7 +341,7 @@ function administrarModificar(id){
 
 function VerAuto(patente){
 
-    var pagina = "http://localhost/ESTACIONAMIENTO_2017/auto/"+patente;
+    var pagina = "http://stellisano.esy.es/auto/"+patente;
 
     $.ajax({
         type: 'GET',
@@ -381,7 +381,7 @@ function modificar(){
   /*  if(!confirm("Seguro de insertar?"))
         return;*/
 
-    var pagina = "http://localhost/ESTACIONAMIENTO_2017/auto";
+    var pagina = "http://stellisano.esy.es/auto";
     
 	var foto = $("#archivo").val();
     var formData = new FormData();
@@ -431,7 +431,7 @@ function modificar(){
 
 function LoginEm(usuario)
 {
-     var pagina = "http://localhost/ESTACIONAMIENTO_2017/login/"+usuario;
+     var pagina = "http://stellisano.esy.es/login/"+usuario;
 
     $.ajax({
         type: 'POST',
@@ -454,7 +454,7 @@ function Egresar(patente){
     if(!confirm("Seguro de eliminar el elemento con patente="+patente+"?"))
         return;
 
-    var pagina = "http://localhost/ESTACIONAMIENTO_2017/auto/"+patente;
+    var pagina = "http://stellisano.esy.es/auto/"+patente;
 
     $.ajax({
         type: 'DELETE',
